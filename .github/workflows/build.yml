@@ -3,7 +3,7 @@ on:
     types: started
 jobs:
   prepare_release:
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     if: github.event.repository.owner.id == github.event.sender.id
     steps:
     - name: Get release tag
@@ -27,12 +27,12 @@ jobs:
 
   build_friendlywrt:
     needs: prepare_release
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     if: github.event.repository.owner.id == github.event.sender.id
     strategy:
       matrix:
         VERSION: ['24.10']
-        SET: [docker, non-docker]
+        SET: [docker]
 
     steps:
     - name: Checkout
@@ -135,14 +135,14 @@ jobs:
 
   build_img:
     needs: [prepare_release,build_friendlywrt]
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     if: github.event.repository.owner.id == github.event.sender.id
 
     strategy:
       matrix:
         VERSION: ['24.10']
         CPU: [rk3399, rk3566]
-        SET: [docker, non-docker]
+        SET: [docker]
     steps:
     - name: Checkout
       uses: actions/checkout@main
